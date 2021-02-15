@@ -75,8 +75,7 @@ class StackTest extends TestCase {
     public function testPop_NotEmptyStack() {
         //given
         $property = $this->getPrivateProperty('stack');
-        $this->stack->push(4);
-        $this->stack->push(8);
+        $property->setValue($this->stack, [4,8]);
         //when
         $result = $this->stack->pull();
         $stack = $property->getValue($this->stack);
