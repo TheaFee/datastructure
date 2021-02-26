@@ -16,69 +16,53 @@ use LinkedList\SinglyLinkedList;
  *
  * @author thea
  */
-class DoubleLinkedList extends SinglyLinkedList implements DoubleLinkedListInterface {
+class DoubleLinkedList extends DoubleLinkedListInterface {
 
-    //protected $headPointer;
     protected $tailPointer;
 
-    //protected $numberOfNodes;
-
     public function __construct() {
-        parent::__construct();
+        $this->headPointer = null;
+        $this->numberOfNodes = 0;
         $this->tailPointer = null;
     }
 
-    public function insertFirst($element, $type = 'double'): void {
-//        if ($type === 'single') {
-//           $singlyLinkedList = new SinglyLinkedList();
-//            $singlyLinkedList->insertFirst($element);
-//        }
-        if ($type === 'double') {
-            $newNode = new NodeDoubleLinkedList();
-            $newNode->setElement($element);
-            $newNode->setBefore(null);
+    public function insertFirst($element): void {
+        $newNode = $this->getNewNode($element);
 
-            if ($this->headPointer != null) {
-                $oldFirstNode = $this->headPointer;
-                $oldHeadPointer = &$oldFirstNode;
-                $newNode->setNext($oldHeadPointer);
+        if ($this->headPointer != null) {
+            $newHeadPointer = &$newNode;
+            $this->headPointer->setBefore($newHeadPointer);
 
-                $newHeadPointer = &$newNode;
-                $oldFirstNode->setBefore($newHeadPointer);
-            } elseif ($this->headPointer === null) {
-                $newNode->setNext(null);
-                $this->tailPointer = &$newNode;
-            }
-
-            $this->headPointer = &$newNode;
-            $this->numberOfNodes++;
+            $this->insertFirstEmptyList($newNode);
+        } elseif ($this->headPointer === null) {
+            $newNode->setNext(null);
+            $this->tailPointer = &$newNode;
         }
+        $this->headPointer = &$newNode;
+        $this->numberOfNodes++;
     }
 
     public function insertLast($element): void {
-        $newNode = new NodeDoubleLinkedList();
-        $newNode->setElement($element);
-        $newNode->setNext(null);
+        $newNode = $this->getNewNode($element);
 
         $oldLastNode = $this->tailPointer;
         $this->tailPointer = &$newNode;
 
-        $pointer = &$oldLastNode;
-        $newNode->setBefore($pointer);
-        $oldLastNode->setNext($newNode);
+        $pointerOldLastNode = &$oldLastNode;
+        $pointerNewNode = &$newNode;
+        $newNode->setBefore($pointerOldLastNode);
+        $oldLastNode->setNext($pointerNewNode);
         $this->numberOfNodes++;
     }
 
-    public function deleteFirst($type = 'double') {
-//        $singlyLinkedList = new SinglyLinkedList();
-
-        if ($this->headPointer === null) {
-            return "Empty list";
-        }
+    public function deleteFirst() {
+        $this->excpetionEmptyList();
         if ($this->numberOfNodes === 1) {
             $deletedNode = $this->deleteIfOneNodeInList();
+            $this->tailPointer = null;
         } else {
             $deletedNode = $this->deleteBegin();
+            $this->headPointer->setBefore(null);
         }
 
         return $deletedNode;
@@ -93,21 +77,12 @@ class DoubleLinkedList extends SinglyLinkedList implements DoubleLinkedListInter
         return $oldLastNode;
     }
 
-    private function deleteIfOneNodeInList() {
-        $deletedNode = $this->headPointer;
-        $this->headPointer = null;
-        $this->tailPointer = null;
-        $this->numberOfNodes--;
-        return $deletedNode;
-    }
+    private function getNewNode($element) {
+        $newNode = new NodeDoubleLinkedList();
+        $newNode->setElement($element);
+        $newNode->setNext(null);
 
-    private function deleteBegin() {
-        $newFirstNode = $this->headPointer->getNext();
-        $oldHeadPoint = $this->headPointer;
-        $this->headPointer = $newFirstNode;
-        $this->headPointer->setBefore(null);
-        $this->numberOfNodes--;
-        return $oldHeadPoint;
+        return $newNode;
     }
 
 }

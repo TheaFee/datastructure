@@ -16,37 +16,27 @@ use LinkedList\SinglyLinkedListInterface;
  *
  * @author thea
  */
-class SinglyLinkedList implements SinglyLinkedListInterface {
-
-    protected $headPointer;
-    protected $numberOfNodes;
+class SinglyLinkedList extends SinglyLinkedListInterface {
 
     public function __construct() {
         $this->headPointer = null;
         $this->numberOfNodes = 0;
     }
 
-    public function insertFirst($element, $type = 'single'): void {
-        $newNode = new NodeSinglyLinkedList();
-        $newNode->setElement($element);
+    public function insertFirst($element): void {
+        $newNode = $this->getNewNode($element);
 
         if ($this->headPointer != null) {
-            $pointer = &$this->headPointer;
-            $newNode->setNext($pointer);
-        }
-        if ($this->headPointer === null) {
+            $this->insertFirstEmptyList($newNode);
+        } elseif ($this->headPointer === null) {
             $newNode->setNext(null);
         }
         $this->headPointer = &$newNode;
         $this->numberOfNodes++;
     }
 
-    public function deleteFirst($type = 'single') {
-        if ($this->headPointer === null) {
-            echo "hier";
-            return "Empty list";
-        }
-        
+    public function deleteFirst() {
+        $this->excpetionEmptyList();
         if ($this->numberOfNodes === 1) {
             $deletedNode = $this->deleteIfOneNodeInList();
         } else {
@@ -55,27 +45,11 @@ class SinglyLinkedList implements SinglyLinkedListInterface {
         return $deletedNode;
     }
 
-    public function printList(): void {
-        $node = $this->headPointer;
-        while ($node != null) {
-            echo $node->getElement() . "<br/>";
-            $node = $node->getNext();
-        }
-    }
+    private function getNewNode($element) {
+        $newNode = new NodeSinglyLinkedList();
+        $newNode->setElement($element);
 
-    private function deleteIfOneNodeInList(): NodeSinglyLinkedList {
-        $deletedNode = $this->headPointer;
-        $this->headPointer = null;
-        $this->numberOfNodes--;
-        return $deletedNode;
-    }
-
-    private function deleteBegin(): NodeSinglyLinkedList {
-        $oldHeadPoint = $this->headPointer;
-        var_dump($oldHeadPoint->getNext());
-        $this->headPointer = $oldHeadPoint->getNext();
-        $this->numberOfNodes--;
-        return $oldHeadPoint;
+        return $newNode;
     }
 
 }

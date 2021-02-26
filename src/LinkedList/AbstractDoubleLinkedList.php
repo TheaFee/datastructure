@@ -14,7 +14,9 @@ use \LinkedList\SinglyLinkedListInterface;
  *
  * @author thea
  */
-interface DoubleLinkedListInterface extends SinglyLinkedListInterface {
-    public function insertLast($element);
-    public function deleteLast();
+abstract class DoubleLinkedListInterface extends SinglyLinkedListInterface {
+
+    abstract public function insertLast($element);
+
+    abstract public function deleteLast();
 }
